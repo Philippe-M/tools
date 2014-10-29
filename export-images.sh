@@ -2,6 +2,7 @@
 
 # Copie des fichiers hautes définitions par rapport à un
 # fichier contenant uniquement le nom des fichiers sans extension
+# __author__ Philippe MALADJIAN (http://www.blogoflip.fr)
 
 ROOT="/root"
 SRC="/www/prod/gallerie/html"

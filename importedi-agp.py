@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+# __author__ Philippe MALADJIAN (http://www.blogoflip.fr)
 
 import ftplib as ftp
 import os
@@ -31,7 +32,7 @@ def connection(value=None):
 
 # Génération du mail pour l'envoie quand le transfert est ok
 def sendMailInfo(destinataire, sujet, info):
-	fromaddr = 'root@hilaire.fr'
+	fromaddr = 'root'
 	message = 'Les fichiers ci-dessous sont en attente : \n'
 	i = 0
 	while i < len(info):
@@ -50,7 +51,7 @@ def sendMailInfo(destinataire, sujet, info):
 
 # Génération du mail pour l'envoie du rapport d'erreur
 def sendMailErreur(destinataire, sujet, error):
-	fromaddr = 'root@hilaire.fr'
+	fromaddr = 'root'
 	message = 'Erreur pendant dans le transfert des fichiers avec les messages suivants : \n'
 	i = 0
 	while i < len(error):
@@ -72,15 +73,14 @@ def transfertHilaire():
 	e = 0
 	nbfic = 0
 	fichier = ''
-	#host = "ftp.atgpedi.net"
-	host = "ftp1.atgpedi.net"
-	mail_user = ['pmaladjian@hilaire.fr','cjoubert@hilaire.fr','cberthier@hilaire.fr','dberlingard@hilaire.fr']
-	mail_admin = ['pmaladjian@hilaire.fr','ybouchek@hilaire.fr','cjoubert@hilaire.fr','cberthier@hilaire.fr','dberlingard@hilaire.fr','igerin@hilaire.fr']
+	host = "ftp"
+	mail_user = ['user1','user2']
+	mail_admin = ['admin1', 'admin2']
 
 	dirsrc = "/commandes"
 	dirclt = "/home/public/edi/commande_client/agp/FIN/"
-	user = "hilairesa"
-	password = "5vkqVzQx"
+	user = "userftp"
+	password = "passeftp"
 
 	try:
 		#pdb.set_trace()

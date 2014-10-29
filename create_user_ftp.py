@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# __author__ Philippe MALADJIAN (http://blogoflip.fr)
+# __author__ Philippe MALADJIAN (http://www.blogoflip.fr)
 # __version__ 2.0
 
 import os
