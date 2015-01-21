@@ -7,3 +7,5 @@ importedi-agp.py : scrupte un répertoire sur un ftp distant, si il y a un nouve
 retour-ligne.sh : lit une liste de ligne d'un fichier, concatène le résultat en ajoutant un ; et ajoute un retour à la ligne toute les 10 lignes.
 
 extract-pdf.sh : extrait les images, textes et créé explose le pdf en autant de page qu'il contient
+
+mail.sh : lit une liste de ligne dans un fichier pour les mettre sur 1 lignes en ajoutant un ; comme séparateur. Tout les 10 enregistrements une nouvelle ligne est créé.
