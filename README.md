@@ -12,4 +12,6 @@ mail.sh : lit une liste de ligne dans un fichier pour les mettre sur 1 lignes en
 
 mouvRename.sh : Liste le contenue d'un répertoire, recherche le nom du fichier sans l'extension dans un fichier csv et renomme ce fichier par une des colonnes du csv
 
+cpRename.sh : Liste le contenue d'un répertoire, recherche le nom du fichier sans l'extension dans un fichier csv et copie dans un autre dossier
+
 convert_export.sh : Transforme un enregistrement sur deux lignes en une avec un séparateur

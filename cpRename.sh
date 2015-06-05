@@ -7,7 +7,7 @@
 DIRSRC="/home/xxx/Bureau/export/src"
 DIROUT="/home/xxx/Bureau/export/out"
 
-echo . > "mouvRename.log"
+echo . > "cpRename.log"
 # Parcours du dossier DIRSRC
 for FILE in `ls ${DIRSRC}`
 do
@@ -25,10 +25,10 @@ do
 		EANHIL=`echo ${LINE} | cut -d";" -f2`
 		if [ "${REFHIL}" == "${FILENAME}" ]
 		then
-			echo "FILENAME = ${FILENAME} | FILEEXT = ${FILEEXT} | REFHIL = ${REFHIL} | EANHIL = $EANHIL | ** ${EANHIL}.${FILEEXT}" >> "mouvRename.log"
-			# ----- Décommenter la ligne suivant le mode de renommage (EAN ou REFERENCE) ---- #
-			#mv "${DIRSRC}/${FILENAME}.${FILEEXT}" "${DIROUT}/${EANHIL}.${FILEEXT}"
-			#mv "${DIRSRC}/${FILENAME}.${FILEEXT}" "${DIROUT}/${REFHIL}.${FILEEXT}"
+			echo "FILENAME = ${FILENAME} | FILEEXT = ${FILEEXT} | REFHIL = ${REFHIL} | EANHIL = $EANHIL | ** ${EANHIL}.${FILEEXT}" >> "cpRename.log"
+			# ---- Décommenter la ligne suivant le mode de renommage (EAN ou REFERENCE) --- #
+			#cp "${DIRSRC}/${FILENAME}.${FILEEXT}" "${DIROUT}/${EANHIL}.${FILEEXT}"
+			#cp "${DIRSRC}/${FILENAME}.${FILEEXT}" "${DIROUT}/${REFHIL}.${FILEEXT}"
 		fi
-	done < "mouvRename.csv"
+	done < "cpRename.csv"
 done
