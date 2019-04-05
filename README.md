@@ -15,3 +15,5 @@ mouvRename.sh : Liste le contenue d'un répertoire, recherche le nom du fichier 
 cpRename.sh : Liste le contenue d'un répertoire, recherche le nom du fichier sans l'extension dans un fichier csv et copie dans un autre dossier
 
 convert_export.sh : Transforme un enregistrement sur deux lignes en une avec un séparateur
+
+compare.sh : cherche si un fichier est présent par rapport à une liste contenue dans un fichier csv
