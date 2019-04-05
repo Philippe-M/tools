@@ -1,6 +1,6 @@
 #!/bin/bash
 i=1
-for mail in `cat /home/xxx/Bureau/gedimat.csv`
+for mail in `cat /home/xxx/Bureau/fic.csv`
 do
 	if [ $i -lt 10 ]
 	then

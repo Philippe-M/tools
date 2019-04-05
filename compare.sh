@@ -3,7 +3,7 @@
 # Lit une liste de références ou gencod et
 # recherche si une photo est trouvé avec ce nom
 
-SRC="/home/pmaladjian/Bureau/anael"
+SRC="/src"
 SEP=";"
 
 while read LINE
@@ -16,4 +16,4 @@ do
 	then
 		echo "$SEARCH --- Référence $REF - $EAN non trouvé" >> ${SRC}/nontrouve.log
 	fi
-done < $SRC"/hilaire.csv"
+done < $SRC"/fic.csv"
