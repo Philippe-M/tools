@@ -4,6 +4,18 @@
 # auteur : Philippe MALADJIAN
 # version : 0.3
 
+BASE=""
+DIRSRC=""
+DIROUT=""
+COLSRC=""
+COLDEST=""
+SUFFIX=""
+PREFIX=""
+CONVERT=""
+QUALITY=""
+RESAMPLE=""
+FILESRC=""
+
 while getopts "b:s:d:e:t:f:p:c:q:a:r:" option
 do
 	case "${option}"
@@ -107,7 +119,7 @@ then
 	echo "Le fichier source doit se trouver dans la même hiérachie que [base]"
 	usage
 fi
-if [ -n ${CONVERT} ]
+if [ ! -z ${CONVERT} ]
 then
 	if [ -z ${QUALITY} ]
 	then
@@ -149,7 +161,7 @@ do
 
 			KEYOUT=`echo ${LINE} | cut -d";" -f${COLDEST}`
 			cp -a "${BASE}/${DIRSRC}/${FILENAME}.${FILEEXT}" "${BASE}/${DIROUT}/${KEYOUT/\/_}${SUFFIX}.${FILEEXT}"
-			if [ -n ${CONVERT} ] 
+			if [ ! -z ${CONVERT} ] 
 			then
 				convert -sampling-factor 4:2:0 \
 					-strip \
