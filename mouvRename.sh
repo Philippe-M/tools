@@ -2,7 +2,7 @@
 # Recherche un nom de fichier dans une colonne du fichier csv
 # et renomme le fichier par la valeur d'une autre colonne du fichier csv
 # auteur : Philippe MALADJIAN
-# version : 0.3
+# version : 0.4
 
 BASE=""
 DIRSRC=""
@@ -16,7 +16,7 @@ QUALITY=""
 RESAMPLE=""
 FILESRC=""
 
-while getopts "b:s:d:e:t:f:p:c:q:a:r:" option
+while getopts "b:s:d:e:t:f:p:c:q:a:v:r:" option
 do
 	case "${option}"
 	in
@@ -30,6 +30,7 @@ do
 		c) CONVERT="${OPTARG}";;
 		q) QUALITY="${OPTARG}";;
 		a) RESAMPLE="${OPTARG}";;
+		v) PREVISU="${OPTARG}";;
 		r) FILESRC="${OPTARG}";;
 		:)
 			echo "L'option ${OPTARG} requiere un argument"
@@ -38,10 +39,10 @@ do
 	esac
 done
 
-function usage { 
+function usage {
 	echo ""
-        echo "mouvRename.sh -b [base] -s [source] -d [out] -e [colsource] -t [coldest] -p [prefix] -f [suffix] -c [convert] -q [quality] -a [resample] -r [filesrc]"
-        echo "mouvRename.sh -b /home/user/rename -s images -d destination -e 1 -t 2 -p Photo_ -f _1 -c 120x120 -q 85 -a 72 -r file.csv"
+        echo "mouvRename.sh -b [base] -s [source] -d [out] -e [colsource] -t [coldest] -p [prefix] -f [suffix] -c [convert] -q [quality] -a [resample] -v [%,dpi] -r [filesrc]"
+        echo "mouvRename.sh -b /home/user/rename -s images -d destination -e 1 -t 2 -p Photo_ -f _1 -c 120x120 -q 85 -a 72 -v 85,72 -r file.csv"
 	echo ""
 	echo "-b : répertoire de base sans le / de fin"
 	echo "-s : emplacement des fichiers sources à renommer"
@@ -53,8 +54,10 @@ function usage {
 	echo "-c : active le redimensionnement et la suppression des metadata pour les images."
 	echo "     120x120 veut dire que les images seront redimensionnées à 120px de la plus grande dimension"
 	echo "     ATTENTION : ne pas activer si vos fichiers ne sont pas des images"
-	echo "-q : pourcentage de compression lorsque -c est activée"
-	echo "-a : valeur en DPI lorsque -c est activée"
+	echo "  -q : pourcentage de compression lorsque -c est activée"
+	echo "  -a : valeur en DPI lorsque -c est activée"
+	echo "-v : génération de la version base définition"
+	echo "     ATTENTION : ne pas activer si vos fichiers ne sont pas des images"
 	echo "-r : fichier csv contenant les correspondances entre nom de fichier source et nom de fichier de destination"
 	echo ""
 	echo "###################################################"
@@ -71,17 +74,23 @@ function usage {
 	echo "# info;fichier2;autrenom2;photo du dimanche"
 	echo "# info;fichier3;autrenom3;photo des enfants"
 	echo "#"
-	echo "# mouvRename.sh -b /home/user/rename -s images -d destination -e 2 -t 3 -p Photo_ -f _1 -c 120x120 -q 85 -a 72 -r file.csv"
+	echo "# mouvRename.sh -b /home/user/rename -s images -d destination -e 2 -t 3 -p Photo_ -f _1 -c 120x120 -q 85 -a 72 -v 85,72 -r file.csv"
 	echo "#"
 	echo "# --- Résultat"
-	echo "# Les images seront redimensionnées au plus grand côté en 120px, en 72 dpi avec un taux de compression à 85% en jpg"
+	echo "# Une vignette sera générée au plus grand côté en 120px, en 72 dpi avec un taux de compression à 85% en jpg dans le répertoire thumbnail"
+	echo "# une prévisualisation sera générée avec une compression de 85% en 72 dpi dans le répertoire preview"
 	echo "#"
 	echo "# /home/user/rename"
 	echo "#  |_ images"
 	echo "#  |_ destination"
-	echo "#    |_ Photo_autrenom1_1.jpg"
-	echo "#    |_ Photo_autrenom2_1.jpg"
-	echo "#    |_ Photo_autrenom3_1.jpg"
+	echo "#    |_ thumbnail"
+	echo "#      |_ Photo_autrenom1_1.jpg"
+	echo "#      |_ Photo_autrenom2_1.jpg"
+	echo "#      |_ Photo_autrenom3_1.jpg"
+	echo "#    |_ preview"
+	echo "#      |_ Photo_autrenom1_1.jpg"
+	echo "#      |_ Photo_autrenom2_1.jpg"
+	echo "#      |_ Photo_autrenom3_1.jpg"
 	echo "#"
 	echo "###################################################"
 	exit 1
@@ -161,7 +170,7 @@ do
 
 			KEYOUT=`echo ${LINE} | cut -d";" -f${COLDEST}`
 			cp -a "${BASE}/${DIRSRC}/${FILENAME}.${FILEEXT}" "${BASE}/${DIROUT}/${KEYOUT/\/_}${SUFFIX}.${FILEEXT}"
-			if [ ! -z ${CONVERT} ] 
+			if [ ! -z ${CONVERT} ]
 			then
 				convert -sampling-factor 4:2:0 \
 					-strip \
@@ -172,9 +181,27 @@ do
 					-units PixelsPerInch \
 					-resize ${CONVERT} \
 					${BASE}/${DIROUT}/${KEYOUT/\/_}${SUFFIX}.${FILEEXT} \
-					${BASE}/${DIROUT}/${KEYOUT/\/_}${SUFFIX}.${FILEEXT}
-				exiftool -q -all= ${BASE}/${DIROUT}/${KEYOUT/\/_}${SUFFIX}.${FILEEXT}
-				exiftool -q -delete_original! ${BASE}/${DIROUT}/${KEYOUT/\/_}${SUFFIX}.${FILEEXT}
+					${BASE}/${DIROUT}/thumbnail/${KEYOUT/\/_}${SUFFIX}.${FILEEXT}
+				exiftool -q -all= ${BASE}/${DIROUT}/thumbnail/${KEYOUT/\/_}${SUFFIX}.${FILEEXT}
+				exiftool -q -delete_original! ${BASE}/${DIROUT}/thumbnail/${KEYOUT/\/_}${SUFFIX}.${FILEEXT}
+			fi
+
+			if [ ! -v ${PREVISU} ]
+			then
+				QUALITY_P=$(echo $PREVISU | cut -f1 -d,)
+				RESAMPLE_P=$(echo $PREVISU | cut -f1 -d,)
+
+				convert -sampling-factor 4:2:0 \
+					-strip \
+					-interlace JPEG \
+					-colorspace sRGB \
+					-quality ${QUALITY_P}% \
+					-resample ${RESAMPLE_P} \
+					-units PixelsPerInch \
+					${BASE}/${DIROUT}/${KEYOUT/\/_}${SUFFIX}.${FILEEXT} \
+					${BASE}/${DIROUT}/preview/${KEYOUT/\/_}${SUFFIX}.${FILEEXT}
+				exiftool -q -all= ${BASE}/${DIROUT}/preview/${KEYOUT/\/_}${SUFFIX}.${FILEEXT}
+				exiftool -q -delete_original! ${BASE}/${DIROUT}/preview/${KEYOUT/\/_}${SUFFIX}.${FILEEXT}
 			fi
 
 			ERREUR=0
